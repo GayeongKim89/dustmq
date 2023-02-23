@@ -1,35 +1,35 @@
-# Rethinking Graph Convolutional Networks in Knowledge Graph Completion
-
+# RAKGE
 This is the code of paper 
-**Rethinking Graph Convolutional Networks in Knowledge Graph Completion**. 
-Zhanqiu Zhang, Jie Wang, Jieping Ye, Feng Wu. WWW 2022. [[arXiv](https://arxiv.org/abs/2202.05679)]
+**Exploiting Relation-aware Attribute Representation Learning in Knowledge Graph Embedding for Numerical Reasoning**. 
 
-## Requirements
-- python 3.7
-- torch 1.8
+
+## Experiment Environment
+- python 3.7+
+- torch 1.9+
 - dgl 0.7
 
 
-## Reproduce the Results
-Pleaes run the commands in `RGCN+CompGCN+LTE/script` or `WGCN/script` to reproduce the results.
+## Usage
+    cd RAKGE
 
-Meaning of different options.
-- rat: random adjacency tensors.
-- wsi: without self-loop information.
-- wni: without neighbor information.
-- ss: sample set sizes for random sampled neighbors.
+### Preprocessing
+    python preprocessing_kg_num_lit.py --dataset {credit, spotify}
 
+### Reproducing Paper's Experiments
+#### RAKGE
+    python run.py --gpu 0 --n_layer 0  --literal --init_dim 200 --att_dim 200 --head_num 5 --name RAKGE --scale 0.25 --data {credit, spotify} --input_drop 0.7 
 
-## Citation
-If you find this code useful, please consider citing the following paper.
-```
-@inproceedings{WWW22_GCN4KGC,
- author = {Zhanqiu Zhang and Jie Wang and Jieping Ye and Feng Wu},
- booktitle = {The Web Conference 2022},
- title = {Rethinking Graph Convolutional Networks in Knowledge Graph Completion},
- year = {2022}
-}
-```
+#### TransE
+    python run.py --gpu 0 --n_layer 0 --init_dim 200 --name lte --score_func transe --opn mult --x_ops "d" --hid_drop 0.7  --data {credit,spotify}
+    
+#### LiteralE
+    python run.py --gpu 0 --n_layer 0 --literal --init_dim 200 --name TransELiteral_gate --data {credit, spotify} --input_drop 0.7 
+   
+#### R-GCN
+    python run.py --gpu 0 --n_layer 1 --score_func transe --opn mult --gcn_dim 150 --init_dim 150 --num_base 5 --encoder rgcn --name repro --data {credit, spotify} --hid_drop 0.7
+   
+ 
+
 
 ## Acknowledgement
-We refer to the code of [CompGCN](https://github.com/malllabiisc/CompGCN), [WGCN](https://github.com/maqy1995/sacn_dgl), and [DGL](https://github.com/dmlc/dgl). Thanks for their contributions.
+We refer to the code of [LTE-KGC](https://github.com/MIRALab-USTC/GCN4KGC) and [LiteralE](https://github.com/SmartDataAnalytics/LiteralE). Thanks for their contributions.
